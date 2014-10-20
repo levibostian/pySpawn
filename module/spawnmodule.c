@@ -7,7 +7,7 @@ static PyObject *spawn_test(PyObject *self, PyObject *args) {
   if (!PyArg_ParseTuple(args, "s", &command)) 
     return NULL;
   sts = system(command);
-  return Py_BuildValue("i", sts);
+  return PyLong_FromLong(sts);
 }
 
 static PyMethodDef SpawnMethods[] = {
@@ -16,16 +16,26 @@ static PyMethodDef SpawnMethods[] = {
   {NULL, NULL, 0, NULL}
 };
 
-PyMODINIT_FUNC initspawn(void) {
-  (void) Py_InitModule("spawn", SpawnMethods);
+static struct PyModuleDef spawnmodule = {
+  PyModuleDef_HEAD_INIT,
+  "spawn",
+  NULL,
+  -1,
+  SpawnMethods
+};
+
+PyMODINIT_FUNC PyInit_spawn(void) {
+  return PyModule_Create(&spawnmodule);
 }
 
 int main(int argc, char *argv[]) {
+  PyImport_AppendInittab("spawn", PyInit_spawn);
+
   Py_SetProgramName(argv[0]);
 
   Py_Initialize();
 
-  initspawn();
+  PyImport_ImportModule("spawn");
 
   return 0;
 }

@@ -1,0 +1,6 @@
+/usr/local/lib/python3.4/dist-packages/pyspawn/spawn.py
+/usr/local/lib/python3.4/dist-packages/pyspawn/__init__.py
+/usr/local/lib/python3.4/dist-packages/pyspawn/__pycache__/spawn.cpython-34.pyc
+/usr/local/lib/python3.4/dist-packages/pyspawn/__pycache__/__init__.cpython-34.pyc
+/usr/local/lib/python3.4/dist-packages/_spawn.cpython-34m.so
+/usr/local/lib/python3.4/dist-packages/pySpawn-0.1.0.egg-info

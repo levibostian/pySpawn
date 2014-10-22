@@ -11,4 +11,6 @@ setup(name='pySpawn',
       author_email="levi.bostian@gmail.com",
       url="https://github.com/levibostian/pySpawn",
       license="MIT",
-      keywords="pyspawn child process")
+      packages=["pyspawn"],
+      keywords="pyspawn child process",
+      install_requires=['sphinx_rtd_theme==0.1.6', 'Sphinx==1.2.3', 'sphinx-autobuild==0.3.0'])

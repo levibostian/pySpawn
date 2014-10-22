@@ -1,6 +1,6 @@
 #include <Python.h>
 
-static PyObject *spawn_test(PyObject *self, PyObject *args) {
+static PyObject *spawn_run(PyObject *self, PyObject *args) {
   const char *command;
   int sts; 
 
@@ -11,8 +11,8 @@ static PyObject *spawn_test(PyObject *self, PyObject *args) {
 }
 
 static PyMethodDef SpawnMethods[] = {
-  {"test", spawn_test, METH_VARARGS,
-   "This is just a test to make sure it works."},
+  {"run", spawn_run, METH_VARARGS,
+   "Run a command while sending STDIN input and capturing STDOUT."},
   {NULL, NULL, 0, NULL}
 };
 

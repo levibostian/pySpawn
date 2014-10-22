@@ -1,6 +1,6 @@
 from distutils.core import setup, Extension
 
-spawn_module = Extension('spawn', sources=['module/spawnmodule.c'])
+spawn_module = Extension('_spawn', sources=['module/spawnmodule.c'])
 
 setup(name='pySpawn',
       version='0.1.0',

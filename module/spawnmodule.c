@@ -18,24 +18,24 @@ static PyMethodDef SpawnMethods[] = {
 
 static struct PyModuleDef spawnmodule = {
   PyModuleDef_HEAD_INIT,
-  "spawn",
+  "_spawn",
   NULL,
   -1,
   SpawnMethods
 };
 
-PyMODINIT_FUNC PyInit_spawn(void) {
+PyMODINIT_FUNC PyInit__spawn(void) {
   return PyModule_Create(&spawnmodule);
 }
 
 int main(int argc, char *argv[]) {
-  PyImport_AppendInittab("spawn", PyInit_spawn);
+  PyImport_AppendInittab("_spawn", PyInit__spawn);
 
   Py_SetProgramName(argv[0]);
 
   Py_Initialize();
 
-  PyImport_ImportModule("spawn");
+  PyImport_ImportModule("_spawn");
 
   return 0;
 }

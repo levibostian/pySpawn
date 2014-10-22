@@ -1,3 +1,3 @@
-import spawn
+import _spawn
 
-spawn.test("echo It works")
+_spawn.test("echo It works")

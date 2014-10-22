@@ -16,7 +16,7 @@ def run(command="", send_input=None, timeout=0, output_file="", listen_for="", h
     :type listen_for: str.
     :param header: Send this text to STDOUT before the command is executed.
     :type header: str.
-    :return: int -- The return code.
+    :return: int -- 0 if successful, 1 if not.
     """
     if send_input is None: send_input = []
     _spawn.run(command)

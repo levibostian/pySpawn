@@ -101,18 +101,21 @@
 <span id="spawn"></span><h2>spawn<a class="headerlink" href="#module-pyspawn.spawn" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="pyspawn.spawn.run">
-<tt class="descclassname">pyspawn.spawn.</tt><tt class="descname">run</tt><big>(</big><em>command=''</em>, <em>send_input=None</em>, <em>timeout=0</em>, <em>output_file=''</em>, <em>listen_for=''</em>, <em>header=''</em><big>)</big><a class="reference internal" href="_modules/pyspawn/spawn.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyspawn.spawn.run" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">pyspawn.spawn.</tt><tt class="descname">run</tt><big>(</big><em>script</em>, <em>program='python3'</em>, <em>input_args=None</em>, <em>input_file=''</em>, <em>timeout=0</em>, <em>output_file=''</em>, <em>append_output=False</em>, <em>watch_for=''</em>, <em>header=''</em><big>)</big><a class="reference internal" href="_modules/pyspawn/spawn.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyspawn.spawn.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a system command.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>command</strong> (<em>str.</em>) &#8211; Command-line command to run.</li>
-<li><strong>send_input</strong> (<em>list.</em>) &#8211; List of strings to send to STDIN one item of the list at a time.</li>
+<li><strong>script</strong> (<em>str.</em>) &#8211; File to run with program argument&#8217;s program.</li>
+<li><strong>program</strong> (<em>str.</em>) &#8211; Command-line command to run.</li>
+<li><strong>input_args</strong> (<em>list.</em>) &#8211; List of strings to send to STDIN one item of the list at a time.</li>
+<li><strong>input_file</strong> (<em>str.</em>) &#8211; Path to file containing lists of strings to send to STDIN.</li>
 <li><strong>timeout</strong> (<em>int.</em>) &#8211; Maximum time command is able to execute before program is killed.</li>
 <li><strong>output_file</strong> (<em>str.</em>) &#8211; Path to file used to save captured STDOUT instead of the console.</li>
-<li><strong>listen_for</strong> (<em>str.</em>) &#8211; Text to listen for in STDOUT. If text is discovered, the command is killed immediately after.</li>
+<li><strong>append_output</strong> (<em>bool.</em>) &#8211; Append STDOUT to output file. (Default&#8211; False, overwrite contents of output file).</li>
+<li><strong>watch_for</strong> (<em>str.</em>) &#8211; Text to listen for in STDOUT. If text is discovered, the command is killed immediately after.</li>
 <li><strong>header</strong> (<em>str.</em>) &#8211; Send this text to STDOUT before the command is executed.</li>
 </ul>
 </td>

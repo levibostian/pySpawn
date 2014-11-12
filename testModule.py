@@ -1,6 +1,7 @@
 import _spawn
 from pyspawn import spawn
 
-_spawn.run("echo _spawn works")
-
-spawn.run("echo pyspawn.spawn also works")
+_spawn.run("python3", "test.py")
+# _spawn.run("testing _spawn")
+#
+# spawn.run("testing spawn")

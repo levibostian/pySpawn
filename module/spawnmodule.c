@@ -19,13 +19,6 @@
 #define PYTHON_BIN "python2.7"
 #endif
 
-void write_to_pipe(int file, char *write) {
-  FILE *stream;
-  stream = fdopen(file, "w");
-  fprintf(stream, "%s", write);
-  fclose(stream);
-}
-
 #ifdef _WIN32
 static PyObject *spawn_run(PyObject *self, PyObject *args) {
   const char *command;
@@ -38,25 +31,30 @@ static PyObject *spawn_run(PyObject *self, PyObject *args) {
 }
 #else
 static PyObject *spawn_run(PyObject *self, PyObject *args) {
-// const char *command;
   char *command;
   char *script;
-  char *command_output = "on linux";
+  char *input;
 
   int pipeparent[2];
   int pipechild[2];
   pid_t cpid;
   char *program_run[2];
+  char child_buf[1025];
+  memset(child_buf, '\0', sizeof(child_buf));
 
   if (pipe(pipeparent) == -1) {
-    perror("pipe");
+    perror("pipe 1");
     exit(EXIT_FAILURE);
   }
 
   if (pipe(pipechild) == -1) {
-    perror("pipe");
+    perror("pipe 2");
     exit(EXIT_FAILURE);
   }
+
+  // Get args from Python dev user.
+  if (!PyArg_ParseTuple(args, "sss", &command, &script, &input))
+    return NULL;
 
   cpid = fork();
   if (cpid == -1) {
@@ -64,43 +62,48 @@ static PyObject *spawn_run(PyObject *self, PyObject *args) {
     exit(EXIT_FAILURE);
   }
 
-  // Get args from Python dev user.
-  if (!PyArg_ParseTuple(args, "ss", &command, &script))
-    return NULL;
-
   if (cpid == 0) { // Child
     close(pipeparent[WRITE_END]);
     close(pipechild[READ_END]);
 
-    dup2(pipeparent[READ_END], STDIN_FILENO);
+    if ((dup2(pipeparent[READ_END], STDIN_FILENO)) == -1) {
+      perror("dup2 pipeparent[READ] copy to STDIN error");
+      exit(EXIT_FAILURE);
+    }
     close(pipeparent[READ_END]);
 
-    dup2(STDOUT_FILENO, pipechild[WRITE_END]);
+    if ((dup2(pipechild[WRITE_END], STDOUT_FILENO)) == -1) {
+      perror("dup2 pipechild[WRITE] copy to STDOUT error");
+      exit(EXIT_FAILURE);
+    }
     close(pipechild[WRITE_END]);
 
     program_run[0] = command;
     program_run[1] = script;
     if (execvp(program_run[0], program_run) < 0) {
-        perror("exec");
+        perror("exec error");
         exit(EXIT_FAILURE);
     }
 
     _exit(EXIT_SUCCESS);
   } else { // Parent
-    close(STDIN_FILENO);
+//    close(STDIN_FILENO); // don't close STDIN in parent or Python REPL will exit.
     close(pipeparent[READ_END]);
     close(pipechild[WRITE_END]);
 
-    dup2(pipechild[READ_END], STDOUT_FILENO);
-    close(pipechild[READ_END]);
-
-    write_to_pipe(pipeparent[WRITE_END], command);
+    write(pipeparent[WRITE_END], input, strlen(input));
     close(pipeparent[WRITE_END]);
+
+    int n;
+    if ((n = read(pipechild[READ_END], child_buf, 1024)) >= 0) {
+      // do something with what got read here. The reading is done.
+    }
+    close(pipechild[READ_END]);
 
     wait(NULL); // Wait for child
   }
 
-  return PyUnicode_FromFormat("%s with python: %s with command %s", command_output, PYTHON_BIN, command);
+  return PyUnicode_FromString(child_buf);
 }
 #endif
 

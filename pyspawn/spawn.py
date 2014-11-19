@@ -1,5 +1,6 @@
 import _spawn
 import os
+import signal
 
 
 def run(script, program="python3", input_args=None, input_file="", timeout=0, output_file="", append_output=False, watch_for="", header=""):
@@ -26,6 +27,13 @@ def run(script, program="python3", input_args=None, input_file="", timeout=0, ou
     :return: int -- 0 if successful, 1 if not.
     """
 
+    # Must set because of library using pipes. http://coding.derkeiler.com/Archive/Python/comp.lang.python/2004-06/3823.html
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+    # TODO
+    # add an argument for max chars to read. send it to the run().
+    # man malloc and look at find out how to detect when you use too much mem
+    # then throw python error.
+
     # TODO
     # make sure input_args AND input_file don't both have a value (might be best to have 2 separate functions
     # instead of doing error checking.
@@ -34,8 +42,11 @@ def run(script, program="python3", input_args=None, input_file="", timeout=0, ou
     if input_args is None:
         send_input = []
 
-    output = _spawn.run(program, script)
-    print(output)
+    accum_outputs = ""
+    for arg in input_args:
+        output = _spawn.run(program, script, arg)
+        accum_outputs += output
+    print(accum_outputs)
 
     # # input file handling
     # if len(input_file) > 0:

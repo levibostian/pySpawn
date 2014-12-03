@@ -30,6 +30,18 @@ static PyObject *spawn_run(PyObject *self, PyObject *args) {
   return PyUnicode_FromFormat("%s with python: %s", command_output, PYTHON_BIN);
 }
 #else
+void read_from_pipe(int file, char* dest, int dest_size) {
+  FILE *stream;
+  int c;
+  int n = 0;
+  stream = fdopen(file, "r");
+  while ((c = fgetc(stream)) != EOF && n <= dest_size) {
+    dest[n] = (char) c;
+    n = n + 1;
+  }
+  fclose(stream);
+}
+
 static PyObject *spawn_run(PyObject *self, PyObject *args) {
   char *command;
   char *script;
@@ -39,11 +51,8 @@ static PyObject *spawn_run(PyObject *self, PyObject *args) {
   int pipechild[2];
   pid_t cpid;
   char *program_run[2];
-  char child_buf[1025];
+  char child_buf[MAX_OUTPUT_LENGTH + 1];
   memset(child_buf, '\0', sizeof(child_buf));
-
-  char other_child_buf[1025];
-  memset(other_child_buf, '\0', sizeof(other_child_buf));
 
   if (pipe(pipeparent) == -1) {
     perror("pipe 1");
@@ -96,23 +105,14 @@ static PyObject *spawn_run(PyObject *self, PyObject *args) {
 
     write(pipeparent[WRITE_END], input, strlen(input));
     close(pipeparent[WRITE_END]);
-//    fsync(pipeparent[WRITE_END]);
 
-    int n;
-    if ((n = read(pipechild[READ_END], child_buf, 1024)) >= 0) {
-      // do something with what got read here. The reading is done.
-    }
-
-    if ((n = read(pipechild[READ_END], other_child_buf, 1024)) >= 0) {
-          // do something with what got read here. The reading is done.
-        }
+    read_from_pipe(pipechild[READ_END], &child_buf, MAX_OUTPUT_LENGTH);
     close(pipechild[READ_END]);
 
     wait(NULL); // Wait for child
   }
 
-//close(pipeparent[WRITE_END]);
-  return PyUnicode_FromString(other_child_buf);
+  return PyUnicode_FromString(child_buf);
 }
 #endif
 

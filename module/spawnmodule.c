@@ -42,6 +42,9 @@ static PyObject *spawn_run(PyObject *self, PyObject *args) {
   char child_buf[1025];
   memset(child_buf, '\0', sizeof(child_buf));
 
+  char other_child_buf[1025];
+  memset(other_child_buf, '\0', sizeof(other_child_buf));
+
   if (pipe(pipeparent) == -1) {
     perror("pipe 1");
     exit(EXIT_FAILURE);
@@ -93,17 +96,23 @@ static PyObject *spawn_run(PyObject *self, PyObject *args) {
 
     write(pipeparent[WRITE_END], input, strlen(input));
     close(pipeparent[WRITE_END]);
+//    fsync(pipeparent[WRITE_END]);
 
     int n;
     if ((n = read(pipechild[READ_END], child_buf, 1024)) >= 0) {
       // do something with what got read here. The reading is done.
     }
+
+    if ((n = read(pipechild[READ_END], other_child_buf, 1024)) >= 0) {
+          // do something with what got read here. The reading is done.
+        }
     close(pipechild[READ_END]);
 
     wait(NULL); // Wait for child
   }
 
-  return PyUnicode_FromString(child_buf);
+//close(pipeparent[WRITE_END]);
+  return PyUnicode_FromString(other_child_buf);
 }
 #endif
 

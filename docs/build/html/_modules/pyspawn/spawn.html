@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyspawn.spawn &mdash; pySpawn 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="pySpawn 0.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../../index.html" class="fa fa-home"> pySpawn</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pyspawn.html">Documentation for pyspawn module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../pyspawn.html#module-pyspawn.spawn">spawn</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">pySpawn</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>pyspawn.spawn</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            
+  <h1>Source code for pyspawn.spawn</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">_spawn</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">signal</span>
+
+
+<div class="viewcode-block" id="run_input_list"><a class="viewcode-back" href="../../pyspawn.html#pyspawn.spawn.run_input_list">[docs]</a><span class="k">def</span> <span class="nf">run_input_list</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="s">&quot;python3&quot;</span><span class="p">,</span> <span class="n">input_args</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">append_output</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">watch_for</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run a system command with list of strings for script STDIN.</span>
+
+<span class="sd">    :param script: File to run with program argument&#39;s program.</span>
+<span class="sd">    :type script: str.</span>
+<span class="sd">    :param program: Command-line command to run.</span>
+<span class="sd">    :type program: str.</span>
+<span class="sd">    :param input_args: List of strings to send to STDIN one item of the list at a time.</span>
+<span class="sd">    :type input_args: list.</span>
+<span class="sd">    :param timeout: Maximum time command is able to execute before program is killed.</span>
+<span class="sd">    :type timeout: int.</span>
+<span class="sd">    :param output_file: Path to file used to save captured STDOUT instead of the console.</span>
+<span class="sd">    :type output_file: str.</span>
+<span class="sd">    :param append_output: Append STDOUT to output file. (Default-- False, overwrite contents of output file).</span>
+<span class="sd">    :type append_output: bool.</span>
+<span class="sd">    :param watch_for: Text to listen for in STDOUT. If text is discovered, the command is killed immediately after.</span>
+<span class="sd">    :type watch_for: str.</span>
+<span class="sd">    :param header: Send this text to STDOUT before the command is executed.</span>
+<span class="sd">    :type header: str.</span>
+<span class="sd">    :return: str -- The STDOUT captured from running script.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># Must set because of library using pipes. http://coding.derkeiler.com/Archive/Python/comp.lang.python/2004-06/3823.html</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_DFL</span><span class="p">)</span>
+    <span class="c"># TODO</span>
+    <span class="c"># add an argument for max chars to read. send it to the run().</span>
+    <span class="c"># man malloc and look at find out how to detect when you use too much mem</span>
+    <span class="c"># then throw python error.</span>
+
+    <span class="k">if</span> <span class="n">input_args</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">send_input</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_args</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;input_args param needs to be type list&quot;</span><span class="p">)</span>
+
+    <span class="n">accum_outputs</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="n">arg_num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">input_args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;input_args item number: </span><span class="si">%i</span><span class="s"> not a string.&quot;</span> <span class="o">%</span> <span class="n">arg_num</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">_spawn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+        <span class="n">accum_outputs</span> <span class="o">+=</span> <span class="n">output</span>
+        <span class="n">arg_num</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+    <span class="k">return</span> <span class="n">accum_outputs</span>
+
+</div>
+<div class="viewcode-block" id="run_input_file"><a class="viewcode-back" href="../../pyspawn.html#pyspawn.spawn.run_input_file">[docs]</a><span class="k">def</span> <span class="nf">run_input_file</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="s">&quot;python3&quot;</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">append_output</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">watch_for</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run a system command with line separated input file for script STDIN.</span>
+
+<span class="sd">    :param script: File to run with program argument&#39;s program.</span>
+<span class="sd">    :type script: str.</span>
+<span class="sd">    :param program: Command-line command to run.</span>
+<span class="sd">    :type program: str.</span>
+<span class="sd">    :param input_file: Path to file containing lists of strings to send to STDIN.</span>
+<span class="sd">    :type input_file: str.</span>
+<span class="sd">    :param timeout: Maximum time command is able to execute before program is killed.</span>
+<span class="sd">    :type timeout: int.</span>
+<span class="sd">    :param output_file: Path to file used to save captured STDOUT instead of the console.</span>
+<span class="sd">    :type output_file: str.</span>
+<span class="sd">    :param append_output: Append STDOUT to output file. (Default-- False, overwrite contents of output file).</span>
+<span class="sd">    :type append_output: bool.</span>
+<span class="sd">    :param watch_for: Text to listen for in STDOUT. If text is discovered, the command is killed immediately after.</span>
+<span class="sd">    :type watch_for: str.</span>
+<span class="sd">    :param header: Send this text to STDOUT before the command is executed.</span>
+<span class="sd">    :type header: str.</span>
+<span class="sd">    :return: str -- The STDOUT captured from running script.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># Must set because of library using pipes. http://coding.derkeiler.com/Archive/Python/comp.lang.python/2004-06/3823.html</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_DFL</span><span class="p">)</span>
+    <span class="c"># TODO</span>
+    <span class="c"># add an argument for max chars to read. send it to the run().</span>
+    <span class="c"># man malloc and look at find out how to detect when you use too much mem</span>
+    <span class="c"># then throw python error.</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">input_file</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">FileNotFoundError</span><span class="p">(</span><span class="s">&quot;input_file does not exist in path: &quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">input_file</span><span class="p">))</span>
+
+    <span class="n">input_file_read</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">accum_outputs</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">input_file_read</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">_spawn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+        <span class="n">accum_outputs</span> <span class="o">+=</span> <span class="n">output</span>
+
+    <span class="k">return</span> <span class="n">accum_outputs</span></div>
+</pre></div>
+
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Levi Bostian.
+    </p>
+  </div>
+
+  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

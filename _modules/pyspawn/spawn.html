@@ -120,7 +120,7 @@
 <span class="sd">    :type watch_for: str.</span>
 <span class="sd">    :param header: Send this text to STDOUT before the command is executed.</span>
 <span class="sd">    :type header: str.</span>
-<span class="sd">    :return: int -- 0 if successful, 1 if not.</span>
+<span class="sd">    :return: str -- The STDOUT captured from running script.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c"># Must set because of library using pipes. http://coding.derkeiler.com/Archive/Python/comp.lang.python/2004-06/3823.html</span>
@@ -143,9 +143,8 @@
         <span class="n">output</span> <span class="o">=</span> <span class="n">_spawn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
         <span class="n">accum_outputs</span> <span class="o">+=</span> <span class="n">output</span>
         <span class="n">arg_num</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">accum_outputs</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="mi">0</span>
+        
+    <span class="k">return</span> <span class="n">accum_outputs</span>
 
 </div>
 <div class="viewcode-block" id="run_input_file"><a class="viewcode-back" href="../../pyspawn.html#pyspawn.spawn.run_input_file">[docs]</a><span class="k">def</span> <span class="nf">run_input_file</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">program</span><span class="o">=</span><span class="s">&quot;python3&quot;</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">append_output</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">watch_for</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
@@ -167,7 +166,7 @@
 <span class="sd">    :type watch_for: str.</span>
 <span class="sd">    :param header: Send this text to STDOUT before the command is executed.</span>
 <span class="sd">    :type header: str.</span>
-<span class="sd">    :return: int -- 0 if successful, 1 if not.</span>
+<span class="sd">    :return: str -- The STDOUT captured from running script.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c"># Must set because of library using pipes. http://coding.derkeiler.com/Archive/Python/comp.lang.python/2004-06/3823.html</span>
@@ -185,9 +184,8 @@
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">input_file_read</span><span class="p">:</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">_spawn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
         <span class="n">accum_outputs</span> <span class="o">+=</span> <span class="n">output</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">accum_outputs</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="mi">0</span></div>
+    <span class="k">return</span> <span class="n">accum_outputs</span></div>
 </pre></div>
 
           </div>

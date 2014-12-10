@@ -45,7 +45,7 @@ def run_input_list(script, program="python3", input_args=None, timeout=0, output
         output = _spawn.run(program, script, arg)
         accum_outputs += output
         arg_num += 1
-        
+
     return accum_outputs
 
 

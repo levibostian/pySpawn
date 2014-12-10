@@ -22,7 +22,7 @@ def run_input_list(script, program="python3", input_args=None, timeout=0, output
     :type watch_for: str.
     :param header: Send this text to STDOUT before the command is executed.
     :type header: str.
-    :return: int -- 0 if successful, 1 if not.
+    :return: str -- The STDOUT captured from running script.
     """
 
     # Must set because of library using pipes. http://coding.derkeiler.com/Archive/Python/comp.lang.python/2004-06/3823.html
@@ -45,9 +45,8 @@ def run_input_list(script, program="python3", input_args=None, timeout=0, output
         output = _spawn.run(program, script, arg)
         accum_outputs += output
         arg_num += 1
-    print(accum_outputs)
-
-    return 0
+        
+    return accum_outputs
 
 
 def run_input_file(script, program="python3", input_file="", timeout=0, output_file="", append_output=False, watch_for="", header=""):
@@ -69,7 +68,7 @@ def run_input_file(script, program="python3", input_file="", timeout=0, output_f
     :type watch_for: str.
     :param header: Send this text to STDOUT before the command is executed.
     :type header: str.
-    :return: int -- 0 if successful, 1 if not.
+    :return: str -- The STDOUT captured from running script.
     """
 
     # Must set because of library using pipes. http://coding.derkeiler.com/Archive/Python/comp.lang.python/2004-06/3823.html
@@ -87,6 +86,5 @@ def run_input_file(script, program="python3", input_file="", timeout=0, output_f
     for line in input_file_read:
         output = _spawn.run(program, script, line)
         accum_outputs += output
-    print(accum_outputs)
 
-    return 0
+    return accum_outputs

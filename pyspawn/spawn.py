@@ -42,7 +42,7 @@ def run_input_list(script, program="python3", input_args=None, timeout=0, output
     for arg in input_args:
         if not isinstance(arg, str):
             raise TypeError("input_args item number: %i not a string." % arg_num)
-        output = _spawn.run(program, script, arg)
+        output = _spawn.run(program, os.path.abspath(script), arg)
         accum_outputs += output
         arg_num += 1
 
@@ -81,10 +81,10 @@ def run_input_file(script, program="python3", input_file="", timeout=0, output_f
     if not os.path.isfile(os.path.abspath(input_file)):
         raise FileNotFoundError("input_file does not exist in path: " + os.path.abspath(input_file))
 
-    input_file_read = open(input_file, 'r')
+    input_file_read = open(os.path.abspath(input_file), 'r')
     accum_outputs = ""
     for line in input_file_read:
-        output = _spawn.run(program, script, line)
+        output = _spawn.run(program, os.path.abspath(script), line)
         accum_outputs += output
 
     return accum_outputs
